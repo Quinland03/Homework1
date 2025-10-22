@@ -1,6 +1,6 @@
 ---
 title: "Homework Assignment 1 PSTAT 131"
-author: "Quinlan Wilson and Jack Guo"
+author: "Quinlan Wilson and Jack Guo (both 131)"
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
 output: pdf_document
 editor_options: 
@@ -10,9 +10,15 @@ editor_options:
 
 ```{r setup, echo=FALSE}
 library(knitr)
+library(MASS)
 library(dplyr)
+library(ggplot2)
 # set global chunk options: images will be 7x5 inches
-knitr::opts_chunk$set(fig.width=7, fig.height=5)
+knitr::opts_chunk$set(
+	fig.height = 5,
+	fig.width = 7,
+	warning = FALSE
+)
 options(digits = 4)
 
 ## indents are for indenting r code as formatted text
@@ -81,6 +87,45 @@ for the chemicals appear to be more calm suggesting that there are
 outliers in the observations. The only chemicals where this isn't the
 case are from mxPH and mnO2 where their means and medians are close
 along with not having extreme variances.
+
+## 2. Data visualization
+
+### (a) 
+
+The distribution is heavily skewed right for NH4
+
+### (b)
+
+```{r}
+algaeBloom<-algae
+algaeBloom <- na.omit(algaeBloom)
+algaeBloom$NH4 <- as.numeric(algaeBloom$NH4)
+
+ggplot(algaeBloom, aes(x = NH4)) +
+  geom_histogram(aes(y = ..density..), bins = 20) +
+  labs(
+    x="NH4",
+    y="Probability",
+    title="Histogram of NH4"
+  ) +
+  geom_density() +
+  geom_rug(sides='t')
+```
+
+
+### (c) 
+The box plots for all three speeds are skewed right.
+```{r}
+a4_speed <- algaeBloom %>%
+  select(a4, speed) %>%
+  group_by(speed)
+
+ggplot(a4_speed, aes(x=a4, y=speed)) +
+  geom_boxplot() +
+  labs(
+    title="A conditioned Boxplot of Algal a4"
+  )
+```
 
 ## 3. Dealing with missing values
 
